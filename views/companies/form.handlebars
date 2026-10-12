@@ -1,0 +1,79 @@
+{{#> page-header eyebrow="Companies" title=heading icon="building"}}{{/page-header}}
+
+{{#if error}}<div class="alert alert-danger py-2" role="alert">{{error}}</div>{{/if}}
+
+<form method="post" action="{{action}}">
+  <input type="hidden" name="_csrf" value="{{csrfToken}}">
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h2 class="card-title-lg">Company details</h2>
+      <p class="text-body-secondary small mb-3">Shown on the company page and in every audit report.</p>
+
+      <div class="mb-3">
+        <label class="form-label" for="name">Company name</label>
+        <input class="form-control" id="name" type="text" name="name" value="{{company.name}}" maxlength="100" required autofocus>
+      </div>
+
+      <div class="row g-3 mb-3">
+        <div class="col-md-5">
+          <label class="form-label" for="account_login">Account login <span class="text-body-secondary fw-normal">(backup application)</span></label>
+          <input class="form-control" id="account_login" type="text" name="account_login" value="{{company.account_login}}" maxlength="100" autocomplete="off" placeholder="Username only">
+          <div class="form-text">The username for their backup application. Never enter a password here.</div>
+        </div>
+        <div class="col-md-7">
+          <label class="form-label" for="storage">Storage</label>
+          <textarea class="form-control" id="storage" name="storage" rows="2" maxlength="500" placeholder="e.g. NAS 20 TB + offsite S3 50 TB">{{company.storage}}</textarea>
+        </div>
+      </div>
+
+      <div>
+        <label class="form-label" for="notes">Notes <span class="text-body-secondary fw-normal">(optional)</span></label>
+        <textarea class="form-control" id="notes" name="notes" rows="3" maxlength="1000">{{company.notes}}</textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+        <div>
+          <h2 class="card-title-lg">Contact persons</h2>
+          <p class="text-body-secondary small mb-0">Add as many as you need. Use the bin to remove one; blank rows are ignored.</p>
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-add-contact><i class="bi bi-plus-lg me-1"></i>Add contact</button>
+      </div>
+
+      <div class="row g-2 contact-head d-none d-md-flex">
+        <div class="col-md-4">Contact person</div>
+        <div class="col-md-3">Number</div>
+        <div class="col-md-4">Email address</div>
+      </div>
+      <div id="contact-rows">
+        {{#each contacts}}
+        <div class="row g-2 align-items-center contact-row">
+          <input type="hidden" name="contact_id" value="{{id}}">
+          <div class="col-md-4"><input class="form-control" type="text" name="contact_name" value="{{name}}" maxlength="100" placeholder="Name" aria-label="Contact person"></div>
+          <div class="col-md-3"><input class="form-control" type="text" name="contact_phone" value="{{phone}}" maxlength="50" placeholder="Number" aria-label="Phone number"></div>
+          <div class="col-md-4"><input class="form-control" type="text" name="contact_email" value="{{email}}" maxlength="150" placeholder="Email" aria-label="Email address" inputmode="email"></div>
+          <div class="col-md-1 text-end"><button type="button" class="btn btn-outline-danger btn-icon" data-remove-contact title="Remove this contact" aria-label="Remove this contact"><i class="bi bi-trash"></i></button></div>
+        </div>
+        {{/each}}
+      </div>
+
+      <template id="contact-row-template">
+        <div class="row g-2 align-items-center contact-row">
+          <input type="hidden" name="contact_id" value="">
+          <div class="col-md-4"><input class="form-control" type="text" name="contact_name" maxlength="100" placeholder="Name" aria-label="Contact person"></div>
+          <div class="col-md-3"><input class="form-control" type="text" name="contact_phone" maxlength="50" placeholder="Number" aria-label="Phone number"></div>
+          <div class="col-md-4"><input class="form-control" type="text" name="contact_email" maxlength="150" placeholder="Email" aria-label="Email address" inputmode="email"></div>
+          <div class="col-md-1 text-end"><button type="button" class="btn btn-outline-danger btn-icon" data-remove-contact title="Remove this contact" aria-label="Remove this contact"><i class="bi bi-trash"></i></button></div>
+        </div>
+      </template>
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Save</button>
+  {{#if isNew}}<button type="submit" name="next" value="audit" class="btn btn-outline-secondary">Save &amp; start audit</button>{{/if}}
+  <a class="btn btn-link text-body-secondary" href="{{#if isNew}}/companies{{else}}/companies/{{company.id}}{{/if}}">Cancel</a>
+</form>

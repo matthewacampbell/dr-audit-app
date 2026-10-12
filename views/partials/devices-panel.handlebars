@@ -1,0 +1,15 @@
+<section id="devices-panel">
+  <h2 class="section-title">Devices in this audit</h2>
+  <p class="text-body-secondary small mb-3">Active devices from <a href="/companies/{{report.company_id}}#devices">{{report.company}}'s page</a>. Add or retire devices there.</p>
+
+  {{#if hasDevices}}
+    {{#each cards}}{{> device-card}}{{/each}}
+  {{else}}
+  <div class="card mb-4">
+    <div class="card-body">
+      <p class="mb-3">{{report.company}} has no active devices to audit.</p>
+      <a class="btn btn-primary" href="/companies/{{report.company_id}}/devices/new"><i class="bi bi-plus-lg me-1"></i>Add a device</a>
+    </div>
+  </div>
+  {{/if}}
+</section>

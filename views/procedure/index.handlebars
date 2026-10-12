@@ -1,0 +1,53 @@
+{{#> page-header eyebrow="Workspace" title="Audit procedure" icon="list-check"}}{{/page-header}}
+
+<div class="alert alert-info py-2 mb-4" role="note">
+  <i class="bi bi-info-circle me-1"></i>Every <strong>new</strong> audit gets a copy of these steps to mark Pass or Fail. Changing them here never alters audits that were already started.
+</div>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <h2 class="card-title-lg">Steps</h2>
+    <p class="text-body-secondary small mb-3">Edit the wording, reorder with the arrows, or remove a step.</p>
+
+    {{#if hasSteps}}
+      {{#each steps}}
+      <div class="row g-2 align-items-center mb-2">
+        <div class="col-auto"><span class="step-no">{{number}}</span></div>
+        <div class="col-12 col-md">
+          <form method="post" action="/procedure/{{id}}" class="d-flex gap-2">
+            <input type="hidden" name="_csrf" value="{{@root.csrfToken}}">
+            <input class="form-control" type="text" name="text" value="{{text}}" maxlength="300" required aria-label="Text of step {{number}}">
+            <button type="submit" class="btn btn-outline-secondary">Save</button>
+          </form>
+        </div>
+        <div class="col-auto d-flex gap-1">
+          <form method="post" action="/procedure/{{id}}/move" class="inline-form">
+            <input type="hidden" name="_csrf" value="{{@root.csrfToken}}"><input type="hidden" name="direction" value="up">
+            <button type="submit" class="btn btn-outline-secondary btn-icon" title="Move up" aria-label="Move step {{number}} up" {{#if isFirst}}disabled{{/if}}><i class="bi bi-arrow-up"></i></button>
+          </form>
+          <form method="post" action="/procedure/{{id}}/move" class="inline-form">
+            <input type="hidden" name="_csrf" value="{{@root.csrfToken}}"><input type="hidden" name="direction" value="down">
+            <button type="submit" class="btn btn-outline-secondary btn-icon" title="Move down" aria-label="Move step {{number}} down" {{#if isLast}}disabled{{/if}}><i class="bi bi-arrow-down"></i></button>
+          </form>
+          <button type="button" class="btn btn-outline-danger btn-icon" title="Remove step" aria-label="Remove step {{number}}"
+                  hx-post="/procedure/{{id}}/delete" hx-swap="none"
+                  hx-confirm="Remove step {{number}}? Audits already started keep their copy."><i class="bi bi-trash"></i></button>
+        </div>
+      </div>
+      {{/each}}
+    {{else}}
+    <p class="text-body-secondary">There are no steps yet. Add the first one below.</p>
+    {{/if}}
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <h2 class="card-title-lg">Add a step</h2>
+    <form method="post" action="/procedure" class="d-flex gap-2 mt-3">
+      <input type="hidden" name="_csrf" value="{{csrfToken}}">
+      <input class="form-control" type="text" name="text" maxlength="300" placeholder="e.g. Confirm the backup job report shows no warnings" aria-label="New step" required>
+      <button type="submit" class="btn btn-primary text-nowrap"><i class="bi bi-plus-lg me-1"></i>Add step</button>
+    </form>
+  </div>
+</div>

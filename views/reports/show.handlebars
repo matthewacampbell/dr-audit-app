@@ -1,0 +1,49 @@
+{{#> page-header eyebrow="Audit" title=report.company icon="clipboard-check"}}
+  <a class="btn btn-primary" href="/reports/{{report.id}}/pdf" target="_blank" rel="noopener"><i class="bi bi-file-earmark-pdf me-1"></i>View PDF</a>
+  <a class="btn btn-outline-secondary" href="/reports/{{report.id}}/pdf?download=1"><i class="bi bi-download me-1"></i>Download</a>
+  {{#unless (eq report.status "pass")}}
+  <form method="post" action="/reports/{{report.id}}/status" class="inline-form">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}"><input type="hidden" name="status" value="pass">
+    <button type="submit" class="btn btn-outline-success"><i class="bi bi-check-circle me-1"></i>Mark as Pass</button>
+  </form>
+  {{/unless}}
+  {{#unless (eq report.status "fail")}}
+  <form method="post" action="/reports/{{report.id}}/status" class="inline-form">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}"><input type="hidden" name="status" value="fail">
+    <button type="submit" class="btn btn-outline-danger"><i class="bi bi-x-circle me-1"></i>Mark as Failed</button>
+  </form>
+  {{/unless}}
+  {{#unless (eq report.status "in_progress")}}
+  <form method="post" action="/reports/{{report.id}}/status" class="inline-form">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}"><input type="hidden" name="status" value="in_progress">
+    <button type="submit" class="btn btn-outline-secondary"><i class="bi bi-arrow-counterclockwise me-1"></i>Reopen</button>
+  </form>
+  {{/unless}}
+{{/page-header}}
+
+<div class="detail-card mb-2">
+  <dl class="row mb-0">
+    <div class="col-sm-6 col-lg-3"><dt>Company</dt><dd><a href="/companies/{{report.company_id}}">{{report.company}}</a></dd></div>
+    <div class="col-sm-6 col-lg-3"><dt>Audit date</dt><dd>{{report.audit_date}}</dd></div>
+    <div class="col-sm-6 col-lg-3"><dt>Completed by</dt><dd>{{report.author}}</dd></div>
+    <div class="col-sm-6 col-lg-3"><dt>Result</dt><dd>{{> status-badge status=report.status}}</dd></div>
+  </dl>
+</div>
+
+{{> procedure-panel}}
+
+{{> devices-panel}}
+
+<div class="card mb-4" id="comments">
+  <div class="card-body">
+    <h2 class="card-title-lg">Additional comments</h2>
+    <p class="text-body-secondary small mb-3">Printed at the end of the report.</p>
+    <form method="post" action="/reports/{{report.id}}/comments">
+      <input type="hidden" name="_csrf" value="{{csrfToken}}">
+      <textarea class="form-control mb-3" name="comments" rows="5" maxlength="5000" aria-label="Additional comments" placeholder="Anything else worth noting about this simulation&hellip;">{{report.comments}}</textarea>
+      <button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i>Save comments</button>
+    </form>
+  </div>
+</div>
+
+<a class="text-body-secondary" href="/"><i class="bi bi-arrow-left me-1"></i>Back to audits</a>

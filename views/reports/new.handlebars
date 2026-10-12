@@ -1,0 +1,33 @@
+{{#> page-header eyebrow="Audits" title="New audit" icon="clipboard-plus"}}{{/page-header}}
+
+{{#if hasCompanies}}
+<div class="card">
+  <div class="card-body">
+    {{#if error}}<div class="alert alert-danger py-2" role="alert">{{error}}</div>{{/if}}
+    <form method="post" action="/reports" autocomplete="off">
+      <input type="hidden" name="_csrf" value="{{csrfToken}}">
+      <div class="mb-1">
+        <label class="form-label" for="company">Company</label>
+        <input class="form-control" id="company" name="company" type="text" list="company-list" value="{{company_name}}" placeholder="Start typing to search&hellip;" required autofocus>
+        <datalist id="company-list">
+          {{#each companies}}<option value="{{name}}"></option>{{/each}}
+        </datalist>
+      </div>
+      <div class="mb-3"><a class="small" href="/companies/new">Company not listed? Add it first.</a></div>
+      <div class="mb-3">
+        <label class="form-label" for="audit_date">Audit date</label>
+        <input class="form-control" id="audit_date" type="date" name="audit_date" value="{{audit_date}}" required>
+      </div>
+      <p class="text-body-secondary small mb-4"><i class="bi bi-info-circle me-1"></i>The audit will include the company's <strong>active devices</strong> and the standard <a href="/procedure">procedure</a>.</p>
+      <button type="submit" class="btn btn-primary">Start audit</button>
+    </form>
+  </div>
+</div>
+{{else}}
+<div class="card">
+  <div class="card-body">
+    <p>There are no companies yet.</p>
+    <a class="btn btn-primary" href="/companies/new"><i class="bi bi-plus-lg me-1"></i>Add a company</a>
+  </div>
+</div>
+{{/if}}

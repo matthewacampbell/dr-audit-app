@@ -1,0 +1,65 @@
+{{#> page-header eyebrow="Administration" title="Users" icon="people"}}{{/page-header}}
+
+{{#if missingNames}}
+<div class="alert alert-warning py-2" role="alert">
+  <i class="bi bi-exclamation-triangle me-1"></i>{{missingNames}} user{{#if (eq missingNames 1)}} has{{else}}s have{{/if}} no name set yet, so reports show their username under &ldquo;Completed by&rdquo;. Use <strong>Edit</strong> to add their name and surname.
+</div>
+{{/if}}
+
+<div class="card mb-4">
+  <div class="card-body">
+    <h2 class="card-title-lg">Add user</h2>
+    <p class="text-body-secondary small mb-3">Name and surname appear on reports under &ldquo;Completed by&rdquo;. Passwords need at least 10 characters.</p>
+    {{#if error}}<div class="alert alert-danger py-2" role="alert">{{error}}</div>{{/if}}
+    <form method="post" action="/admin/users">
+      <input type="hidden" name="_csrf" value="{{csrfToken}}">
+      <div class="row g-3 mb-3">
+        <div class="col-md-6"><label class="form-label" for="first_name">Name</label><input class="form-control" id="first_name" type="text" name="first_name" value="{{form.first_name}}" maxlength="50" required autocomplete="off"></div>
+        <div class="col-md-6"><label class="form-label" for="last_name">Surname</label><input class="form-control" id="last_name" type="text" name="last_name" value="{{form.last_name}}" maxlength="50" required autocomplete="off"></div>
+        <div class="col-md-4"><label class="form-label" for="username">Username</label><input class="form-control" id="username" type="text" name="username" value="{{form.username}}" maxlength="32" required autocomplete="off"></div>
+        <div class="col-md-4"><label class="form-label" for="password">Password</label><input class="form-control" id="password" type="password" name="password" minlength="10" maxlength="72" required autocomplete="new-password"></div>
+        <div class="col-md-4">
+          <label class="form-label" for="role">Role</label>
+          <select class="form-select" id="role" name="role">
+            <option value="employee">Employee</option>
+            <option value="admin" {{#if form.isAdmin}}selected{{/if}}>Admin</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary"><i class="bi bi-person-plus me-1"></i>Create user</button>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <h2 class="card-title-lg">All users</h2>
+    <p class="text-body-secondary small mb-3">Disabled users can't sign in, even if they're already signed in.</p>
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle">
+        <thead><tr><th>Name</th><th>Username</th><th>Role</th><th>Status</th><th>Created</th><th></th></tr></thead>
+        <tbody>
+          {{#each users}}
+          <tr>
+            <td class="fw-semibold">{{#if fullName}}{{fullName}}{{else}}<span class="muted fw-normal">Not set</span>{{/if}}{{#if isSelf}} <span class="muted fw-normal">(you)</span>{{/if}}</td>
+            <td>{{username}}</td>
+            <td>{{role}}</td>
+            <td>{{#if isActive}}<span class="badge text-bg-success">Active</span>{{else}}<span class="badge text-bg-secondary">Disabled</span>{{/if}}</td>
+            <td>{{created_at}}</td>
+            <td class="actions">
+              <a class="btn btn-sm btn-outline-secondary" href="/admin/users/{{id}}/edit"><i class="bi bi-pencil-fill icon-edit me-1"></i>Edit</a>
+              <a class="btn btn-sm btn-outline-secondary" href="/admin/users/{{id}}/edit#password"><i class="bi bi-key me-1"></i>Reset password</a>
+              {{#unless isSelf}}
+              <form method="post" action="/admin/users/{{id}}/toggle" class="inline-form">
+                <input type="hidden" name="_csrf" value="{{@root.csrfToken}}">
+                <button type="submit" class="btn btn-sm btn-outline-secondary">{{#if isActive}}Disable{{else}}Enable{{/if}}</button>
+              </form>
+              {{/unless}}
+            </td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

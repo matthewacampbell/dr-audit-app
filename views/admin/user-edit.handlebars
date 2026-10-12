@@ -1,0 +1,64 @@
+{{#> page-header eyebrow="Administration" title=target.displayName icon="person-gear"}}
+  <a class="btn btn-outline-secondary" href="/admin/users"><i class="bi bi-arrow-left me-1"></i>All users</a>
+{{/page-header}}
+
+<div class="card mb-4">
+  <div class="card-body">
+    <h2 class="card-title-lg">User details</h2>
+    <p class="text-body-secondary small mb-3">Created {{target.created_at}}{{#if target.isSelf}} &middot; this is your account{{/if}}.</p>
+    {{#if error}}<div class="alert alert-danger py-2" role="alert">{{error}}</div>{{/if}}
+    <form method="post" action="/admin/users/{{target.id}}">
+      <input type="hidden" name="_csrf" value="{{csrfToken}}">
+      <div class="row g-3 mb-3">
+        <div class="col-md-6">
+          <label class="form-label" for="first_name">Name</label>
+          <input class="form-control" id="first_name" type="text" name="first_name" value="{{target.first_name}}" maxlength="50" required autocomplete="off">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label" for="last_name">Surname</label>
+          <input class="form-control" id="last_name" type="text" name="last_name" value="{{target.last_name}}" maxlength="50" required autocomplete="off">
+          <div class="form-text">Shown on reports under &ldquo;Completed by&rdquo;.</div>
+        </div>
+      </div>
+      <div class="row g-3 mb-4">
+        <div class="col-md-6">
+          <label class="form-label" for="username">Username</label>
+          <input class="form-control" id="username" type="text" name="username" value="{{target.username}}" maxlength="32" required autocomplete="off">
+          <div class="form-text">3&ndash;32 characters: letters, numbers, dot, dash, underscore.</div>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label" for="role">Role</label>
+          <select class="form-select" id="role" name="role" {{#if target.isSelf}}disabled{{/if}}>
+            <option value="employee" {{#if target.isEmployeeRole}}selected{{/if}}>Employee</option>
+            <option value="admin" {{#if target.isAdminRole}}selected{{/if}}>Admin</option>
+          </select>
+          <div class="form-text">{{#if target.isSelf}}You can't change your own role.{{else}}Admins can also manage users.{{/if}}</div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Save changes</button>
+    </form>
+  </div>
+</div>
+
+<div class="card" id="password">
+  <div class="card-body">
+    <h2 class="card-title-lg">Reset password</h2>
+    <p class="text-body-secondary small mb-3">Set a new password for {{target.displayName}}. They will be signed out everywhere and will need to sign in again with it.</p>
+    {{#if passwordError}}<div class="alert alert-danger py-2" role="alert">{{passwordError}}</div>{{/if}}
+    <form method="post" action="/admin/users/{{target.id}}/password">
+      <input type="hidden" name="_csrf" value="{{csrfToken}}">
+      <div class="row g-3 mb-4">
+        <div class="col-md-6">
+          <label class="form-label" for="new_password">New password</label>
+          <input class="form-control" id="new_password" type="password" name="new_password" minlength="10" maxlength="72" required autocomplete="new-password">
+          <div class="form-text">At least 10 characters.</div>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label" for="confirm_password">Confirm new password</label>
+          <input class="form-control" id="confirm_password" type="password" name="confirm_password" minlength="10" maxlength="72" required autocomplete="new-password">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-outline-danger"><i class="bi bi-key me-1"></i>Reset password</button>
+    </form>
+  </div>
+</div>

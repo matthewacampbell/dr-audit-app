@@ -1,0 +1,22 @@
+<div class="auth-card">
+  <div class="auth-brand"><i class="bi bi-layers-fill"></i><span>{{appName}}</span></div>
+  <div class="card">
+    <div class="card-body">
+      <h1 class="card-title-lg">Sign in</h1>
+      <p class="text-body-secondary small mb-3">Use the account an administrator created for you.</p>
+      {{#if error}}<div class="alert alert-danger py-2" role="alert">{{error}}</div>{{/if}}
+      <form method="post" action="/login">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <div class="mb-3">
+          <label class="form-label" for="username">Username</label>
+          <input class="form-control" id="username" type="text" name="username" value="{{username}}" autocomplete="username" required autofocus>
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="password">Password</label>
+          <input class="form-control" id="password" type="password" name="password" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Sign in</button>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+<div class="card mb-4" id="procedure-panel">
+  <div class="card-body">
+    <div class="d-flex flex-wrap align-items-start justify-content-between gap-2 mb-3">
+      <div>
+        <h2 class="card-title-lg">Procedure</h2>
+        <p class="text-body-secondary small mb-0">Work through each step and mark it Pass or Fail.</p>
+      </div>
+      <div>{{> proc-summary}}</div>
+    </div>
+    {{#if hasSteps}}
+    <div class="proc-list">
+      {{#each steps}}{{> proc-row}}{{/each}}
+    </div>
+    {{else}}
+    <p class="mb-0 text-body-secondary">This audit has no procedure steps. <a href="/procedure">Add steps to the procedure</a> and they'll appear in new audits.</p>
+    {{/if}}
+  </div>
+</div>

@@ -1,0 +1,108 @@
+{{#> page-header eyebrow="Company" title=company.name icon="building"}}
+  <a class="btn btn-primary" href="/reports/new?company={{company.id}}"><i class="bi bi-plus-lg me-1"></i>New audit</a>
+  <a class="btn btn-outline-secondary" href="/companies/{{company.id}}/edit"><i class="bi bi-pencil-fill icon-edit me-1"></i>Edit</a>
+{{/page-header}}
+
+<div class="card mb-4" id="details">
+  <div class="card-body">
+    <h2 class="card-title-lg mb-3">Company details</h2>
+    <div class="detail-card">
+      <dl class="row mb-0">
+        <div class="col-md-5"><dt>Account login <span class="fw-normal">(backup application)</span></dt><dd>{{#if company.account_login}}{{company.account_login}}{{else}}<span class="muted">Not set</span>{{/if}}</dd></div>
+        <div class="col-md-7"><dt>Storage</dt><dd class="text-pre">{{#if company.storage}}{{company.storage}}{{else}}<span class="muted">Not set</span>{{/if}}</dd></div>
+        {{#if company.notes}}<div class="col-12"><dt>Notes</dt><dd class="mb-0 text-pre">{{company.notes}}</dd></div>{{/if}}
+      </dl>
+    </div>
+
+    <h3 class="card-title-lg mt-4 mb-2">Contact persons</h3>
+    {{#if contacts.length}}
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle">
+        <thead><tr><th>Contact person</th><th>Number</th><th>Email address</th></tr></thead>
+        <tbody>
+          {{#each contacts}}
+          <tr>
+            <td class="fw-semibold">{{name}}</td>
+            <td>{{phone}}</td>
+            <td>{{#if email}}<a href="mailto:{{email}}">{{email}}</a>{{/if}}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+    {{else}}
+    <p class="mb-0 text-body-secondary">No contacts yet. Add them with <a href="/companies/{{company.id}}/edit">Edit</a>.</p>
+    {{/if}}
+  </div>
+</div>
+
+<div class="card mb-4" id="devices">
+  <div class="card-body">
+    <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+      <div>
+        <h2 class="card-title-lg">Devices</h2>
+        <p class="text-body-secondary small mb-0">Audits cover the <strong>active</strong> devices listed here ({{activeDeviceCount}} now). Retire a device to leave it out of new audits.</p>
+      </div>
+      <a class="btn btn-sm btn-primary" href="/companies/{{company.id}}/devices/new"><i class="bi bi-plus-lg me-1"></i>Add device</a>
+    </div>
+    {{#if devices.length}}
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle">
+        <thead><tr><th>Device</th><th>Type</th><th>Identifier</th><th>Audits</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+          {{#each devices}}
+          <tr>
+            <td class="fw-semibold">{{name}}</td>
+            <td>{{device_type}}</td>
+            <td>{{identifier}}</td>
+            <td>{{audit_count}}</td>
+            <td>{{#if isActive}}<span class="badge text-bg-success">Active</span>{{else}}<span class="badge text-bg-secondary">Retired</span>{{/if}}</td>
+            <td class="actions">
+              <a class="btn btn-sm btn-outline-secondary btn-icon" href="/companies/{{@root.company.id}}/devices/{{id}}/edit" title="Edit device" aria-label="Edit {{name}}"><i class="bi bi-pencil-fill icon-edit"></i></a>
+              <form method="post" action="/companies/{{@root.company.id}}/devices/{{id}}/toggle" class="inline-form">
+                <input type="hidden" name="_csrf" value="{{@root.csrfToken}}">
+                <button type="submit" class="btn btn-sm btn-outline-secondary">{{#if isActive}}Retire{{else}}Restore{{/if}}</button>
+              </form>
+            </td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+    {{else}}
+    <p class="mb-0 text-body-secondary">No devices yet. Add the devices you audit for this company.</p>
+    {{/if}}
+  </div>
+</div>
+
+<div class="card mb-4" id="audits">
+  <div class="card-body">
+    <h2 class="card-title-lg">Audits</h2>
+    <p class="text-body-secondary small mb-3">Every audit done for this company, newest first.</p>
+    {{#if audits.length}}
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle">
+        <thead><tr><th>Date</th><th>Devices</th><th>Completed by</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+          {{#each audits}}
+          <tr>
+            <td class="text-nowrap"><a href="/reports/{{id}}">{{audit_date}}</a></td>
+            <td>{{device_count}}</td>
+            <td>{{author}}</td>
+            <td>{{> status-badge status=status}}</td>
+            <td class="actions">
+              <a class="btn btn-sm btn-outline-secondary" href="/reports/{{id}}"><i class="bi bi-eye me-1"></i>Open</a>
+              <a class="btn btn-sm btn-outline-secondary" href="/reports/{{id}}/pdf?download=1"><i class="bi bi-file-earmark-pdf me-1"></i>PDF</a>
+            </td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+    {{else}}
+    <p class="mb-0 text-body-secondary">No audits for this company yet.</p>
+    {{/if}}
+  </div>
+</div>
+
+<a class="text-body-secondary" href="/companies"><i class="bi bi-arrow-left me-1"></i>All companies</a>

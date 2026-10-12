@@ -1,0 +1,21 @@
+<div id="step-{{id}}" class="proc-row">
+  <form hx-post="/reports/{{@root.report.id}}/steps/{{id}}" hx-trigger="change" hx-swap="none">
+    <div class="row g-2 align-items-center">
+      <div class="col-auto"><span class="step-no">{{number}}</span></div>
+      <div class="col-12 col-md">{{text}}</div>
+      <div class="col-auto">
+        <div class="btn-group btn-group-sm" role="group" aria-label="Result for step {{number}}">
+          <input type="radio" class="btn-check" name="result" id="s{{id}}-pass" value="pass" autocomplete="off" {{#if isPass}}checked{{/if}}>
+          <label class="btn btn-outline-success" for="s{{id}}-pass"><i class="bi bi-check-lg me-1"></i>Pass</label>
+          <input type="radio" class="btn-check" name="result" id="s{{id}}-fail" value="fail" autocomplete="off" {{#if isFail}}checked{{/if}}>
+          <label class="btn btn-outline-danger" for="s{{id}}-fail"><i class="bi bi-x-lg me-1"></i>Fail</label>
+        </div>
+        <button type="button" class="btn btn-sm btn-link text-body-secondary" title="Clear this result" aria-label="Clear the result for step {{number}}"
+                hx-post="/reports/{{@root.report.id}}/steps/{{id}}/clear" hx-target="#step-{{id}}" hx-swap="outerHTML">Clear</button>
+      </div>
+      <div class="col-12 col-md-4">
+        <input class="form-control form-control-sm" type="text" name="note" value="{{note}}" maxlength="300" placeholder="Note (optional)" aria-label="Note for step {{number}}">
+      </div>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,65 @@
+<div id="ad-{{id}}" class="card device-card">
+  <div class="card-header">
+    <div>
+      <i class="bi bi-hdd-rack me-2 text-primary"></i>{{name}}
+      <span class="device-meta">{{#if device_type}} &middot; {{device_type}}{{/if}}{{#if identifier}} &middot; {{identifier}}{{/if}}</span>
+    </div>
+    {{#if retired}}<span class="badge text-bg-secondary">Retired</span>{{/if}}
+  </div>
+
+  <div class="card-body">
+    <div class="row g-3">
+      {{#each sections}}
+      <div class="col-lg-6">
+        <div class="test-box">
+          <h3><i class="bi bi-{{#if (eq kind "backup")}}cloud-arrow-up{{else}}arrow-repeat{{/if}} text-primary"></i>{{label}} test</h3>
+
+          {{#if message}}<div class="alert alert-danger py-2 small" role="alert">{{message}}</div>{{/if}}
+
+          <form hx-post="/reports/{{reportId}}/devices/{{adId}}/tests/{{kind}}" hx-target="#ad-{{adId}}" hx-swap="outerHTML">
+            <div class="row g-2 mb-2">
+              <div class="col-sm-6">
+                <label class="form-label small mb-1">Start</label>
+                <input class="form-control form-control-sm" type="datetime-local" step="1" name="started_at" value="{{started}}">
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label small mb-1">Finish</label>
+                <input class="form-control form-control-sm" type="datetime-local" step="1" name="finished_at" value="{{finished}}">
+              </div>
+            </div>
+            <div class="d-flex align-items-center flex-wrap gap-3 mb-3">
+              <button type="submit" class="btn btn-sm btn-outline-secondary">Save times</button>
+              {{#if hasDuration}}<span class="duration"><i class="bi bi-stopwatch text-primary"></i>Duration <strong>{{duration}}</strong></span>{{/if}}
+            </div>
+          </form>
+
+          {{#if screenshots.length}}
+          <div class="shots">
+            {{#each screenshots}}
+            <figure>
+              <a href="/screenshots/{{id}}" target="_blank" rel="noopener"><img class="thumb" src="/screenshots/{{id}}" alt="{{original_name}}" loading="lazy"></a>
+              <button type="button" class="link-button"
+                      hx-post="/reports/{{reportId}}/devices/{{adId}}/screenshots/{{id}}/delete"
+                      hx-target="#ad-{{adId}}" hx-swap="outerHTML"
+                      hx-confirm="Delete this screenshot?"><i class="bi bi-trash me-1"></i>Delete</button>
+            </figure>
+            {{/each}}
+          </div>
+          {{else}}
+          <p class="text-body-secondary small mb-2">No screenshot yet.</p>
+          {{/if}}
+
+          <div class="paste-zone" tabindex="0" data-url="/reports/{{reportId}}/devices/{{adId}}/tests/{{kind}}/screenshots"
+               data-target="ad-{{adId}}" data-kind="{{kind}}" aria-label="Paste a {{label}} screenshot: click here, then press Ctrl+V">
+            <i class="bi bi-clipboard-plus"></i>
+            <div><strong>Click here, then press Ctrl+V</strong> to paste a screenshot</div>
+            <div class="paste-status small"></div>
+            <button type="button" class="btn btn-link btn-sm p-0" data-choose-file>or choose a file</button>
+            <input type="file" class="paste-file d-none" accept="image/png,image/jpeg,image/webp" aria-label="{{label}} screenshot file">
+          </div>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+</div>

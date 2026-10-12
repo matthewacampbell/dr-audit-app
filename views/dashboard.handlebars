@@ -1,0 +1,34 @@
+{{#> page-header eyebrow="Audits" title="Audit reports" icon="clipboard-check"}}
+  <a class="btn btn-primary" href="/reports/new"><i class="bi bi-plus-lg me-1"></i>New audit</a>
+{{/page-header}}
+
+<div class="card">
+  <div class="card-body">
+    <h2 class="card-title-lg">All audits</h2>
+    <p class="text-body-secondary small mb-3">Most recent first.</p>
+
+    {{#if reports.length}}
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle">
+        <thead><tr><th>Date</th><th>Company</th><th>Completed by</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+          {{#each reports}}
+          <tr>
+            <td class="text-nowrap"><a href="/reports/{{id}}">{{audit_date}}</a></td>
+            <td><a href="/companies/{{company_id}}">{{company}}</a></td>
+            <td>{{author}}</td>
+            <td>{{> status-badge status=status}}</td>
+            <td class="actions">
+              <a class="btn btn-sm btn-outline-secondary" href="/reports/{{id}}"><i class="bi bi-eye me-1"></i>Open</a>
+              <a class="btn btn-sm btn-outline-secondary" href="/reports/{{id}}/pdf?download=1"><i class="bi bi-file-earmark-pdf me-1"></i>PDF</a>
+            </td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+    {{else}}
+    <p class="mb-0">No audit reports yet. Start one with <strong>New audit</strong>.</p>
+    {{/if}}
+  </div>
+</div>

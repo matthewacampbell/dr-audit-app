@@ -1,0 +1,47 @@
+{{#> page-header eyebrow="Companies" title="Search companies" icon="search"}}
+  <a class="btn btn-primary" href="/companies/new"><i class="bi bi-plus-lg me-1"></i>Add company</a>
+{{/page-header}}
+
+<div class="card mb-4">
+  <div class="card-body">
+    <h2 class="card-title-lg">Search criteria</h2>
+    <p class="text-body-secondary small mb-3">Search by company name, or by a contact's name or email address.</p>
+    <form method="get" action="/companies">
+      <input class="form-control form-control-lg mb-3" type="search" name="q" value="{{q}}" placeholder="e.g. acme" aria-label="Search companies">
+      <button type="submit" class="btn btn-primary">Search</button>
+      <a class="btn btn-outline-secondary" href="/companies">Show all</a>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <h2 class="card-title-lg">{{#if searched}}Results for &ldquo;{{q}}&rdquo;{{else}}All companies{{/if}}</h2>
+    <p class="text-body-secondary small mb-3">{{companies.length}} found</p>
+
+    {{#if companies.length}}
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle">
+        <thead><tr><th>Company</th><th>Notes</th><th>Contacts</th><th>Devices</th><th>Audits</th><th></th></tr></thead>
+        <tbody>
+          {{#each companies}}
+          <tr>
+            <td><a class="fw-semibold" href="/companies/{{id}}">{{name}}</a></td>
+            <td class="notes">{{notes}}</td>
+            <td>{{contact_count}}</td>
+            <td>{{device_count}}</td>
+            <td>{{report_count}}</td>
+            <td class="actions">
+              <a class="btn btn-sm btn-primary" href="/reports/new?company={{id}}"><i class="bi bi-plus-lg me-1"></i>New audit</a>
+              <a class="btn btn-sm btn-outline-secondary btn-icon" href="/companies/{{id}}/edit" title="Edit company" aria-label="Edit {{name}}"><i class="bi bi-pencil-fill icon-edit"></i></a>
+            </td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+    {{else}}
+    <p class="mb-0">{{#if searched}}No companies match that search.{{else}}No companies yet. Add your first one to get started.{{/if}}</p>
+    {{/if}}
+  </div>
+</div>
